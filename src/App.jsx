@@ -7,6 +7,7 @@ import { Route, Routes, useNavigate } from "react-router-dom"
 
 // Components
 import Navbar from "./components/Common/Navbar"
+import FloatingChatbot from "./components/Common/FloatingChatbot"
 import OpenRoute from "./components/core/Auth/OpenRoute"
 import PrivateRoute from "./components/core/Auth/PrivateRoute"
 import AddCourse from "./components/core/Dashboard/AddCourse"
@@ -29,7 +30,6 @@ import ForgotPassword from "./pages/ForgotPassword"
 import Home from "./pages/Home"
 import Login from "./pages/Login"
 import Signup from "./pages/Signup"
-import ChatBot from "./pages/Chatbot"
 import UpdatePassword from "./pages/UpdatePassword"
 import VerifyEmail from "./pages/VerifyEmail"
 import ViewCourse from "./pages/ViewCourse"
@@ -108,11 +108,6 @@ function App() {
             </PrivateRoute>
           }
         >
-        <Route path="/chatbot" 
-          element={
-            <PrivateRoute>
-              <ChatBot />
-            </PrivateRoute>} />
           {/* Route for all users */}
           <Route path="dashboard/my-profile" element={<MyProfile />} />
           <Route path="dashboard/Settings" element={<Settings />} />
@@ -162,6 +157,7 @@ function App() {
         {/* 404 Page */}
         <Route path="*" element={<Error />} />
       </Routes>
+      <FloatingChatbot />
     </div>
   )
 }

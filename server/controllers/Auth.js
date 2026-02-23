@@ -184,45 +184,47 @@ exports.sendotp = async (req, res) => {
   try {
     const { email } = req.body
 
-    // Check if user is already present
-    // Find user with provided email
-    const checkUserPresent = await User.findOne({ email })
-    // to be used in case of signup
+    if (!email || typeof email !== "string" || !email.trim()) {
+      return res.status(400).json({
+        success: false,
+        message: "Email is required",
+      })
+    }
 
-    // If user found with provided email
+    const emailTrimmed = email.trim().toLowerCase()
+
+    // Check if user is already present
+    const checkUserPresent = await User.findOne({ email: emailTrimmed })
     if (checkUserPresent) {
-      // Return 401 Unauthorized status code with error message
       return res.status(401).json({
         success: false,
-        message: `User is Already Registered`,
+        message: "User is Already Registered",
       })
     }
 
-    var otp = otpGenerator.generate(6, {
-      upperCaseAlphabets: false,
-      lowerCaseAlphabets: false,
-      specialChars: false,
-    })
-    const result = await OTP.findOne({ otp: otp })
-    console.log("Result is Generate OTP Func")
-    console.log("OTP", otp)
-    console.log("Result", result)
-    while (result) {
+    let otp
+    let existing = true
+    while (existing) {
       otp = otpGenerator.generate(6, {
         upperCaseAlphabets: false,
+        lowerCaseAlphabets: false,
+        specialChars: false,
       })
+      const result = await OTP.findOne({ otp })
+      existing = !!result
     }
-    const otpPayload = { email, otp }
-    const otpBody = await OTP.create(otpPayload)
-    console.log("OTP Body", otpBody)
+
+    const otpPayload = { email: emailTrimmed, otp }
+    await OTP.create(otpPayload)
+
     res.status(200).json({
       success: true,
-      message: `OTP Sent Successfully`,
+      message: "OTP Sent Successfully",
       otp,
     })
   } catch (error) {
-    console.log(error.message)
-    return res.status(500).json({ success: false, error: error.message })
+    console.error("sendotp error:", error.message)
+    return res.status(500).json({ success: false, message: error.message })
   }
 }
 

@@ -1,4 +1,7 @@
 // Importing necessary modules and packages
+const dotenv = require("dotenv");
+dotenv.config();
+
 const express = require("express");
 const app = express();
 const userRoutes = require("./routes/user");
@@ -12,17 +15,13 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const { cloudinaryConnect } = require("./config/cloudinary");
 const fileUpload = require("express-fileupload");
-const dotenv = require("dotenv");
 
-// Setting up port number
-const PORT = process.env.PORT||4000;
-
-// Loading environment variables from .env file
-dotenv.config();
+// Setting up port number (from .env or 4000)
+const PORT = process.env.PORT || 4000;
 
 // Connecting to database
 database.connect();
- 
+
 // Middlewares
 app.use(express.json());
 app.use(cookieParser());
@@ -48,7 +47,7 @@ app.use("/api/v1/profile", profileRoutes);
 app.use("/api/v1/course", courseRoutes);
 app.use("/api/v1/payment", paymentRoutes);
 app.use("/api/v1/reach", contactUsRoute);
-app.use("/api/v1" , chatbotRoute);
+app.use("/api/v1", chatbotRoute);
 
 // Testing the server
 app.get("/", (req, res) => {
@@ -62,5 +61,3 @@ app.get("/", (req, res) => {
 app.listen(PORT, () => {
 	console.log(`App is listening at ${PORT}`);
 });
-
-// End of code.

@@ -56,7 +56,7 @@ const ChatBot = () => {
         try {
             const { data } = await axios.post(
                 `${process.env.REACT_APP_BASE_URL}/chatbot`,
-                { query: trimmedInput }
+                { message: trimmedInput }
             );
             setMessages((prev) => [...prev, { sender: "bot", text: data.reply }]);
         } catch (error) {
